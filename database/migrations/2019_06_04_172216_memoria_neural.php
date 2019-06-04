@@ -13,8 +13,9 @@ class MemoriaNeural extends Migration
           $table->string('tags');
           $table->string('stags');
           $table->string('htags');
-          $table->longText('id_resposta');
           $table->boolean('aprender');
+          $table->integer('id_resposta');
+          $table->integer('id_rasputin');
           $table->timestamps();
       });
     }
@@ -26,6 +27,6 @@ class MemoriaNeural extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('memoria_neural');
     }
 }

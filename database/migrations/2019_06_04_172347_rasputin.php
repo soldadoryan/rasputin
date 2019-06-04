@@ -4,11 +4,11 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class Personalidade extends Migration
+class Rasputin extends Migration
 {
     public function up()
     {
-      Schema::create('personalidade', function (Blueprint $table) {
+      Schema::create('rasputin', function (Blueprint $table) {
           $table->bigIncrements('id');
           $table->string('nome');
           $table->string('imagem');
@@ -18,6 +18,6 @@ class Personalidade extends Migration
 
     public function down()
     {
-      Schema::drop('personalidade');
+      Schema::drop('rasputin');
     }
 }

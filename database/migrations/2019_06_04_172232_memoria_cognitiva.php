@@ -16,6 +16,7 @@ class MemoriaCognitiva extends Migration
           $table->string('stags');
           $table->string('htags');
           $table->longText('resposta');
+          $table->integer('id_rasputin');
           $table->timestamps();
       });
     }
@@ -27,6 +28,6 @@ class MemoriaCognitiva extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('memoria_cognitiva');
     }
 }
