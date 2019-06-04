@@ -1,100 +1,107 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Rasputin Vive</title>
+  <title>Rasputin Vive</title>
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Cinzel+Decorative&display=swap" rel="stylesheet">
 
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #2c2c2c;
-                font-family: 'ZCOOL KuaiLe', cursive;
-                color: #34d114;
-                font-weight: 200;
-                height: 100vh;
-                margin: 0;
-            }
+  <!-- Styles -->
+  <style>
+  html, body {
+    background-color: #2c2c2c;
+    font-family: 'Cinzel Decorative', cursive;
+    color: red;
+    font-weight: 200;
+    background: url("https://i0.wp.com/www.institutomillenium.org.br/wp-content/uploads/2017/11/627c8ee453bf007207be9b5cf4780647.jpeg?fit=1920%2C1080&ssl=1");
+    height: 100vh;
+    margin: 0;
+  }
 
-            .full-height {
-                height: 100vh;
-            }
+  .filter {
+    background-color: rgba(0, 0, 0, 0.9);
+  }
 
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
+  .full-height {
+    height: 100vh;
+  }
 
-            .position-ref {
-                position: relative;
-            }
+  .flex-center {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  }
 
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
+  .position-ref {
+    position: relative;
+  }
 
-            .content {
-                text-align: center;
-            }
+  .top-right {
+    position: absolute;
+    right: 10px;
+    top: 18px;
+  }
 
-            .title {
-                font-size: 84px;
-                font-color: green;
-            }
+  .content {
+    text-align: center;
+  }
 
-            .links > a {
-                color: #fff;
-                padding: 0 25px;
-                font-size: 13px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
+  .title {
+    font-size: 84px;
+    font-color: green;
+  }
 
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @auth
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ route('login') }}">Login</a>
+  .links > a {
+    color: #fff;
+    padding: 0 25px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .1rem;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
 
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
-                        @endif
-                    @endauth
-                </div>
-            @endif
+  .m-b-md {
+    margin-bottom: 30px;
+  }
+  </style>
+</head>
+<body>
+  <div class="filter">
+    <div class="flex-center position-ref full-height">
+      @if (Route::has('login'))
+      <div class="top-right links">
+        @auth
+        <a href="{{ url('/home') }}">Home</a>
+        @else
+        <a href="{{ route('login') }}">Login</a>
 
-            <div class="content">
-                <div class="title m-b-md">
-                    Rasputin Project
-                </div>
+        @if (Route::has('register'))
+        <a href="{{ route('register') }}">Register</a>
+        @endif
+        @endauth
+      </div>
+      @endif
 
-                <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div>
-            </div>
+      <div class="content">
+        <div class="title m-b-md">
+          Rasputin Project
         </div>
-    </body>
+
+        <div class="links">
+          <a href="https://laravel.com/docs">Docs</a>
+          <a href="https://laracasts.com">Laracasts</a>
+          <a href="https://laravel-news.com">News</a>
+          <a href="https://blog.laravel.com">Blog</a>
+          <a href="https://nova.laravel.com">Nova</a>
+          <a href="https://forge.laravel.com">Forge</a>
+          <a href="https://github.com/laravel/laravel">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
 </html>
