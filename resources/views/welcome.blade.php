@@ -4,17 +4,17 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>Rasputin Vive</title>
 
         <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
 
         <!-- Styles -->
         <style>
             html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Nunito', sans-serif;
+                background-color: #2c2c2c;
+                font-family: 'ZCOOL KuaiLe', cursive;
+                color: #34d114;
                 font-weight: 200;
                 height: 100vh;
                 margin: 0;
@@ -46,10 +46,11 @@
 
             .title {
                 font-size: 84px;
+                font-color: green;
             }
 
             .links > a {
-                color: #636b6f;
+                color: #fff;
                 padding: 0 25px;
                 font-size: 13px;
                 font-weight: 600;
@@ -81,7 +82,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel
+                    Rasputin Project
                 </div>
 
                 <div class="links">
