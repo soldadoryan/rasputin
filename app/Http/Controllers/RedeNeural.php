@@ -10,6 +10,12 @@ use App\Personalidade;
 class RedeNeural extends Controller
 {
 
+  //PONTUACAO DAS TAGS
+  CONST VTAGS = 1;
+  CONST VSTAGS = 2;
+  CONST VHTAGS = 4;
+
+
   public function responder($id_personalidade, $pergunta) {
     $id_rasputin = base64_decode($id_personalidade);
     $p = $this->tratarPergunta($pergunta);
@@ -21,10 +27,6 @@ class RedeNeural extends Controller
     // $memoria_neural =
     $memoria_cognitiva = MemoriaCognitiva::where("id_rasputin", $id_rasputin)->get();
 
-    $tag = $memoria_cognitiva[0]->tags;
-
-    $array_pontuacao = [];
-
     $id_max_pont = 0;
     $max_pont = 0;
     foreach ($memoria_cognitiva as $mc) {
@@ -35,40 +37,36 @@ class RedeNeural extends Controller
         $STags = explode(',', $mc->stags);
         $HTags = explode(',', $mc->htags);
 
-
-        for ($y=0; $y < count($Tags); $y++) {
-          if($p[$i] == $Tags[$y]) {
-            $pont += $VTAGS;
-          }
+        if(in_array($p[$i],$Tags)){
+          $pont += self::VTAGS;
         }
 
-        for ($z=0; $z < count($STags); $z++) {
-          if($p[$i] == $STags[$z]) {
-            $pont += $VSTAGS;
-          }
+        if(in_array($p[$i],$STags)){
+          $pont += self::VSTAGS;
         }
 
-        for ($t=0; $t < count($HTags); $t++) {
-          if($p[$i] == $HTags[$t]) {
-            $pont += $VHTAGS;
-          }
-        }
+        if(in_array($p[$i],$HTags)){
+          $pont += self::VHTAGS;
+        } 
+
       }
 
       if($max_pont < $pont) {
         $id_max_pont = $mc->id;
         $max_pont = $pont;
       }
-
-      array_push($array_pontuacao, [
-        "id" => $mc->id,
-        "pontuacao" => $pont,
-      ]);
+     
     }
 
-    if($id_max_pont == -1) {
-      return "blaaaum";
+    if($id_max_pont == 0) {
+      return "nao entendi, repita por favor";
     }
+
+    $resposta = MemoriaCognitiva::where("id", $id_max_pont)->get();
+
+    return $resposta[0]->resposta;
+
+
   }
 
   public function tratarPergunta($pergunta) {
