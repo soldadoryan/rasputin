@@ -57,64 +57,95 @@ class RedeNeural extends Controller
     $mn->id_rasputin =  $id_rasputin;
 
     $mn->save();
-    //return $pontuacao_mc . " " . $pontuacao_mn;
+    // echo "VERFICANDO PONTUACOES <BR>";
+    // echo 'PONTUAÇÃO MC => ' . $pontuacao_mc . '<BR>';
+    // echo 'PONTUAÇÃO MC => ' . $pontuacao_mc . " PONTUAÇÃO MN =>" . $pontuacao_mn . '<BR>';
     if($pontuacao_mc < 4 && $pontuacao_mn < 4) {
       return "nao entendi, repita por favor";
     }
-
+    //dd($this->pergunta_max_pont_mn->aprender);
     if($pontuacao_mc > $pontuacao_mn) {
       return $this->pergunta_max_pont_mc->resposta;
     } else {
-      if($this->pergunta_max_pont_mn->aprender)
-      return $this->pergunta_max_pont_mn->resposta;
+      if($this->pergunta_max_pont_mn->aprender == true)
+        return $this->pergunta_max_pont_mn->resposta;
       else
-      return $this->pergunta_max_pont_mc->resposta;
+        return $this->pergunta_max_pont_mc->resposta;
     }
   }
 
-  public function neuronio($pergunta,$memoria_cognitiva,$tipoMemoria){
+  public function neuronio($pergunta,$memoria_cognitiva,$tipoMemoria){   
+    // echo "PERGUNTA <BR>";
+    // print_r($pergunta);
+    // echo "<BR>";
+    // echo "TIPO MEMORIA <BR>";
+    // print_r($tipoMemoria);
+    // echo "<BR>";
     if(count($memoria_cognitiva) > 0) {
       foreach ($memoria_cognitiva as $mc) {
-
-        $this->max_pont = 0;
+         // echo "=====================================================<br>";
+        //$this->max_pont = 0;
         $pont = 0;
         $mn_tags = "";
         $mn_stags = "";
         $mn_htags = "";
+
+        // echo "MN_STAGS ANTES DO FOR <BR>";
+        // print_r($mn_stags);
+        // echo "<BR>";
+
+        // echo "MN_HTAGS ANTES DO FOR <BR>";
+        // print_r($mn_htags);
+        // echo "<BR>";
 
         for ($i=0; $i < count($pergunta); $i++) {
           $Tags = explode(',', $mc->tags);
           $STags = explode(',', $mc->stags);
           $HTags = explode(',', $mc->htags);
 
-          // dd($mc->htags)
+          // echo "PONTUACAO ANTES DOS INARRAY <BR>";
+          // print_r($pont);
+          // echo "<BR>";
 
           if(in_array($pergunta[$i],$Tags)){
             $pont += self::VTAGS;
             if($mn_tags != "")
-            $mn_tags .= "," . $pergunta[$i];
+              $mn_tags .= "," . $pergunta[$i];
             else
-            $mn_tags = $pergunta[$i];
+              $mn_tags = $pergunta[$i];
           }
+
+          // echo "PONTUACAO APOS TAGS <BR>";
+          // print_r($pont);
+          // echo "<BR>";
 
           if(in_array($pergunta[$i],$STags)){
             $pont += self::VSTAGS;
             if($mn_stags != "")
-            $mn_stags .= "," . $pergunta[$i];
+              $mn_stags .= "," . $pergunta[$i];
             else
-            $mn_stags = $pergunta[$i];
+              $mn_stags = $pergunta[$i];
           }
 
-          print_r($HTags);
+          // echo "MN_STAGS APOS STAGS <BR>";
+          // print_r($mn_stags);
+          // echo "<BR>";
+
+          //print_r($HTags);
           if(in_array($pergunta[$i],$HTags)){
             $pont += self::VHTAGS;
             if($mn_htags != "")
-            $mn_htags .= "," . $pergunta[$i];
+              $mn_htags .= "," . $pergunta[$i];
             else
-            $mn_htags = $pergunta[$i];
+              $mn_htags = $pergunta[$i];
           }
+
+        //   echo "MN_HTAGS APOS HTAGS <BR>";
+        // print_r($mn_htags);
+        // echo "<BR>";
         }
 
+        //echo 'THIS MAX PONT => ' . $this->max_pont . " PONT =>" . $pont . '<BR>';
         if($this->max_pont <= $pont) {
           if($tipoMemoria == "mc"){
             $this->MNTags = $mn_tags;
@@ -129,9 +160,15 @@ class RedeNeural extends Controller
           $this->max_pont = $pont;
         }
 
-      }
+      //   echo "PONTUACAO DENTRO DO FOREACH <BR>";
+      // print_r($pont);
+      // echo "<BR>";
 
-      return $pont;
+      }
+      // echo "PONTUACAO DENTRO DO NEURONIO <BR>";
+      // print_r($pont);
+      // echo "<BR>";
+      return $this->max_pont;
     }
     return 0;
   }
