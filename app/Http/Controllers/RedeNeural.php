@@ -15,58 +15,69 @@ class RedeNeural extends Controller
   CONST VSTAGS = 2;
   CONST VHTAGS = 4;
 
+  private $memoriaCognitiva;
+  private $id_max_pont = 0;
+  private $max_pont = 0;
+
+  public function __construct(MemoriaCognitiva $memoriaCognitiva) {
+    $this->memoriaCognitiva = $memoriaCognitiva;
+  }
+
 
   public function responder($id_personalidade, $pergunta) {
+
     $id_rasputin = base64_decode($id_personalidade);
-    $p = $this->tratarPergunta($pergunta);
 
-    $VTAGS = 1;
-    $VSTAGS = 2;
-    $VHTAGS = 4;
+    $perguntaTratada = $this->tratarPergunta($pergunta);
 
-    // $memoria_neural =
-    $memoria_cognitiva = MemoriaCognitiva::where("id_rasputin", $id_rasputin)->get();
+    $memoria_cognitiva = $this->memoriaCognitiva->where("id_rasputin", $id_rasputin)->get();
 
-    $id_max_pont = 0;
-    $max_pont = 0;
+    $pontuacao = $this->neuronio($perguntaTratada,$memoria_cognitiva); 
+
+    if($this->id_max_pont == 0) {
+      return "nao entendi, repita por favor";
+    }
+
+    $resposta = $this->memoriaCognitiva->where("id", $this->id_max_pont)->get();
+
+    return $resposta[0]->resposta;
+
+
+  }
+
+  public function neuronio($pergunta,$memoria_cognitiva){
     foreach ($memoria_cognitiva as $mc) {
+
       $pont = 0;
-      for ($i=0; $i < count($p); $i++) {
+
+      for ($i=0; $i < count($pergunta); $i++) {
 
         $Tags = explode(',', $mc->tags);
         $STags = explode(',', $mc->stags);
         $HTags = explode(',', $mc->htags);
 
-        if(in_array($p[$i],$Tags)){
+        if(in_array($pergunta[$i],$Tags)){
           $pont += self::VTAGS;
         }
 
-        if(in_array($p[$i],$STags)){
+        if(in_array($pergunta[$i],$STags)){
           $pont += self::VSTAGS;
         }
 
-        if(in_array($p[$i],$HTags)){
+        if(in_array($pergunta[$i],$HTags)){
           $pont += self::VHTAGS;
         } 
 
       }
 
-      if($max_pont < $pont) {
-        $id_max_pont = $mc->id;
-        $max_pont = $pont;
+      if($this->max_pont < $pont) {
+        $this->id_max_pont = $mc->id;
+        $this->max_pont = $pont;
       }
-     
+
     }
 
-    if($id_max_pont == 0) {
-      return "nao entendi, repita por favor";
-    }
-
-    $resposta = MemoriaCognitiva::where("id", $id_max_pont)->get();
-
-    return $resposta[0]->resposta;
-
-
+    return $pont;
   }
 
   public function tratarPergunta($pergunta) {
