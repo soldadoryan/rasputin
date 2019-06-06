@@ -45,14 +45,18 @@ class RedeNeural extends Controller
     // busca dados da memória cognitiva
     $memoria_cognitiva = $this->memoriaCognitiva->where("id_rasputin", $id_rasputin)->get();
     $memoria_neural = $this->memoriaNeural->where("id_rasputin", $id_rasputin)->get();
+    // dd($memoria_neural);
 
     $pontuacao_mc = $this->neuronio($perguntaTratada,$memoria_cognitiva, "mc");
     $pontuacao_mn = $this->neuronio($perguntaTratada,$memoria_neural, "mn");
+
 
     $mn = new $this->memoriaNeural;
     $mn->tags = $this->MNTags;
     $mn->stags = $this->MNSTags;
     $mn->htags = $this->MNHTags;
+    $mn->pergunta = $pergunta;
+    $mn->aprender = 1;
     $mn->id_resposta =  $this->pergunta_max_pont_mc->id;
     $mn->id_rasputin =  $id_rasputin;
 
@@ -63,15 +67,15 @@ class RedeNeural extends Controller
     if($pontuacao_mc < 4 && $pontuacao_mn < 4) {
       return "nao entendi, repita por favor";
     }
-    // dd($this->pergunta_max_pont_mn);
     if($pontuacao_mc > $pontuacao_mn) {
-      echo "Entrou mc > mn";
       return $this->pergunta_max_pont_mc->resposta;
     } else {
-      echo "Entrou else";
       if(count($memoria_neural) > 0) {
-        if($this->pergunta_max_pont_mn->aprender == true)
-        return $this->pergunta_max_pont_mn->resposta;
+        // dd($this->pergunta_max_pont_mn);
+        if($this->pergunta_max_pont_mn->aprender == true) {
+          $pergunta_aux = $this->memoriaCognitiva->where("id_rasputin", $id_rasputin)->where("id", $this->pergunta_max_pont_mn->id_resposta)->first();
+          return $pergunta_aux->resposta;
+        }
         else
         return $this->pergunta_max_pont_mc->resposta;
       }
@@ -85,10 +89,12 @@ class RedeNeural extends Controller
     // echo "TIPO MEMORIA <BR>";
     // print_r($tipoMemoria);
     // echo "<BR>";
+
+
     if(count($memoria_cognitiva) > 0) {
+      $this->max_pont = 0;
       foreach ($memoria_cognitiva as $mc) {
         // echo "=====================================================<br>";
-        //$this->max_pont = 0;
         $pont = 0;
         $mn_tags = "";
         $mn_stags = "";
