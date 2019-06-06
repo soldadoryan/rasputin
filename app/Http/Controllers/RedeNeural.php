@@ -63,18 +63,22 @@ class RedeNeural extends Controller
     if($pontuacao_mc < 4 && $pontuacao_mn < 4) {
       return "nao entendi, repita por favor";
     }
-    //dd($this->pergunta_max_pont_mn->aprender);
+    // dd($this->pergunta_max_pont_mn);
     if($pontuacao_mc > $pontuacao_mn) {
+      echo "Entrou mc > mn";
       return $this->pergunta_max_pont_mc->resposta;
     } else {
-      if($this->pergunta_max_pont_mn->aprender == true)
+      echo "Entrou else";
+      if(count($memoria_neural) > 0) {
+        if($this->pergunta_max_pont_mn->aprender == true)
         return $this->pergunta_max_pont_mn->resposta;
-      else
+        else
         return $this->pergunta_max_pont_mc->resposta;
+      }
     }
   }
 
-  public function neuronio($pergunta,$memoria_cognitiva,$tipoMemoria){   
+  public function neuronio($pergunta,$memoria_cognitiva,$tipoMemoria){
     // echo "PERGUNTA <BR>";
     // print_r($pergunta);
     // echo "<BR>";
@@ -83,7 +87,7 @@ class RedeNeural extends Controller
     // echo "<BR>";
     if(count($memoria_cognitiva) > 0) {
       foreach ($memoria_cognitiva as $mc) {
-         // echo "=====================================================<br>";
+        // echo "=====================================================<br>";
         //$this->max_pont = 0;
         $pont = 0;
         $mn_tags = "";
@@ -110,9 +114,9 @@ class RedeNeural extends Controller
           if(in_array($pergunta[$i],$Tags)){
             $pont += self::VTAGS;
             if($mn_tags != "")
-              $mn_tags .= "," . $pergunta[$i];
+            $mn_tags .= "," . $pergunta[$i];
             else
-              $mn_tags = $pergunta[$i];
+            $mn_tags = $pergunta[$i];
           }
 
           // echo "PONTUACAO APOS TAGS <BR>";
@@ -122,9 +126,9 @@ class RedeNeural extends Controller
           if(in_array($pergunta[$i],$STags)){
             $pont += self::VSTAGS;
             if($mn_stags != "")
-              $mn_stags .= "," . $pergunta[$i];
+            $mn_stags .= "," . $pergunta[$i];
             else
-              $mn_stags = $pergunta[$i];
+            $mn_stags = $pergunta[$i];
           }
 
           // echo "MN_STAGS APOS STAGS <BR>";
@@ -135,14 +139,14 @@ class RedeNeural extends Controller
           if(in_array($pergunta[$i],$HTags)){
             $pont += self::VHTAGS;
             if($mn_htags != "")
-              $mn_htags .= "," . $pergunta[$i];
+            $mn_htags .= "," . $pergunta[$i];
             else
-              $mn_htags = $pergunta[$i];
+            $mn_htags = $pergunta[$i];
           }
 
-        //   echo "MN_HTAGS APOS HTAGS <BR>";
-        // print_r($mn_htags);
-        // echo "<BR>";
+          //   echo "MN_HTAGS APOS HTAGS <BR>";
+          // print_r($mn_htags);
+          // echo "<BR>";
         }
 
         //echo 'THIS MAX PONT => ' . $this->max_pont . " PONT =>" . $pont . '<BR>';
@@ -160,9 +164,9 @@ class RedeNeural extends Controller
           $this->max_pont = $pont;
         }
 
-      //   echo "PONTUACAO DENTRO DO FOREACH <BR>";
-      // print_r($pont);
-      // echo "<BR>";
+        //   echo "PONTUACAO DENTRO DO FOREACH <BR>";
+        // print_r($pont);
+        // echo "<BR>";
 
       }
       // echo "PONTUACAO DENTRO DO NEURONIO <BR>";
