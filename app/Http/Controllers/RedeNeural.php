@@ -34,19 +34,18 @@ class RedeNeural extends Controller
 
   public function responder($id_personalidade, $pergunta) {
 
-
     // pega id do rasputin
     $id_rasputin = base64_decode($id_personalidade);
 
     $rasputin = $this->rasputin->where("id", $id_rasputin)->first();
-    
+
 
     // tratar pergunta
     $perguntaTratada = $this->tratarPergunta($pergunta);
 
     // busca dados da memória cognitiva e da memoria neural
     $memoria_cognitiva = $this->memoriaCognitiva->where("id_rasputin", $id_rasputin)->get();
-    $memoria_neural = $this->memoriaNeural->where("id_rasputin", $id_rasputin)->get();    
+    $memoria_neural = $this->memoriaNeural->where("id_rasputin", $id_rasputin)->get();
 
     //pega a pontuação retornada
     $pontuacao_mc = $this->neuronio($perguntaTratada,$memoria_cognitiva, "mc");
@@ -59,18 +58,20 @@ class RedeNeural extends Controller
     $mn->stags = $this->MNSTags;
     $mn->htags = $this->MNHTags;
     $mn->pergunta = $pergunta;
-    $mn->aprender = 1;
+    // $mn->aprender = 1;
     $mn->id_resposta =  $this->pergunta_max_pont_mc->id;
     $mn->id_rasputin =  $id_rasputin;
 
     $mn->save();
-    
+
     if($pontuacao_mc < 4 && $pontuacao_mn < 4) {
-      return $this->resposta($rasputin,'Não entendi, repita por favor!', '');            
+      return $this->resposta($rasputin,'Não entendi, repita por favor!', '');
     }
 
+    $umn = $this->memoriaNeural::orderBy("id", "desc")->first();
+
     if($pontuacao_mc > $pontuacao_mn) {
-      return $this->resposta($rasputin,$this->pergunta_max_pont_mc->resposta, $this->pergunta_max_pont_mc->id);
+      return $this->resposta($rasputin,$this->pergunta_max_pont_mc->resposta, $umn->id);
     } else {
 
       if(count($memoria_neural) > 0) {
@@ -78,12 +79,12 @@ class RedeNeural extends Controller
         if($this->pergunta_max_pont_mn->aprender == true) {
 
           $pergunta_aux = $this->memoriaCognitiva->where("id_rasputin", $id_rasputin)->where("id", $this->pergunta_max_pont_mn->id_resposta)->first();
-          
-          return $this->resposta($rasputin,$pergunta_aux->resposta, $this->pergunta_max_pont_mn->id_resposta);          
+
+          return $this->resposta($rasputin,$pergunta_aux->resposta, $umn->id);
 
         }
         else
-          return $this->resposta($rasputin,$this->pergunta_max_pont_mc->resposta, $this->pergunta_max_pont_mc->id); 
+          return $this->resposta($rasputin,$this->pergunta_max_pont_mc->resposta, $umn->id);
       }
     }
   }
@@ -103,7 +104,7 @@ class RedeNeural extends Controller
           $Tags = explode(',', $mc->tags);
           $STags = explode(',', $mc->stags);
           $HTags = explode(',', $mc->htags);
-          
+
 
           if(in_array($pergunta[$i],$Tags)){
             $pont += self::VTAGS;
@@ -132,7 +133,7 @@ class RedeNeural extends Controller
 
         }
 
-        
+
         if($this->max_pont <= $pont) {
           if($tipoMemoria == "mc"){
             $this->MNTags = $mn_tags;
@@ -145,10 +146,10 @@ class RedeNeural extends Controller
           }
 
           $this->max_pont = $pont;
-        }        
+        }
 
       }
-      
+
       return $this->max_pont;
     }
     return 0;
@@ -156,7 +157,7 @@ class RedeNeural extends Controller
 
   public function resposta($rasputin,$resposta,$id_resposta){
     return response()->json([
-      'nome' => $rasputin->nome, 
+      'nome' => $rasputin->nome,
       'avatar' => $rasputin->imagem,
       'resposta' => $resposta,
       'id_resposta' => $id_resposta,
@@ -179,27 +180,16 @@ class RedeNeural extends Controller
     return preg_replace(array("/(á|à|ã|â|ä)/","/(Á|À|Ã|Â|Ä)/","/(é|è|ê|ë)/","/(É|È|Ê|Ë)/","/(í|ì|î|ï)/","/(Í|Ì|Î|Ï)/","/(ó|ò|õ|ô|ö)/","/(Ó|Ò|Õ|Ô|Ö)/","/(ú|ù|û|ü)/","/(Ú|Ù|Û|Ü)/","/(ñ)/","/(Ñ)/","/(ç)/","/(Ç)/"),explode(" ","a A e E i I o O u U n N c C"), $pergunta);
   }
 
-  public function atualizaMemoriaNeural($id,$condicao){    
+  public function atualizaMemoriaNeural($id,$condicao){
 
     $resposta = $this->memoriaNeural->find($id);
-
-    if(sizeof($resposta) > 0){
-
-      if($condicao == 0) 
+      if($condicao == 0)
         $resposta->aprender = 0;
-      if($condicao == 1) 
+      if($condicao == 1)
         $resposta->aprender = 1;
 
       $resposta->save();
 
       return response()->json(['success'   => 'Registro atualziado!','error'   => '',], 200);
-    }
-
-    return response()->json(['success'   => '','error'   => 'Registro nao encontrado',], 404);
-
-
-
-    
-
   }
 }
