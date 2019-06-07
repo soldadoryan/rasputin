@@ -12,11 +12,11 @@ class LeadController extends Controller
   public function salvar(Request $request){
     $validator = Validator::make($request->all(), [
       'nome' => 'required',
-      'email' => 'required'
+      'email' => 'required'      
     ]);
 
     if ($validator->fails()) {
-      Log::warning("Falha ao enviar parametros! : promotionUser => " . $validator->errors());
+      Log::warning("Falha ao enviar parametros! : " . $validator->errors());
 
       return response()->json(['success' => '' , 'error' => 'true', 'description' => $validator->errors()], 400);
     }
