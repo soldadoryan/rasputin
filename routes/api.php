@@ -14,3 +14,6 @@ use Illuminate\Http\Request;
 */
 Route::get("/{id_personalidade}/perguntar/{pergunta}", "RedeNeural@responder");
 Route::get("/atualiza-pergunta/{id}/{condicao}", "RedeNeural@atualizaMemoriaNeural");
+
+
+Route::post("/salva-dados", "LeadController@salvar");
