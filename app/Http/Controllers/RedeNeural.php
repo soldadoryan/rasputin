@@ -172,6 +172,8 @@ class RedeNeural extends Controller
     $pergunta = str_replace(",", "", $pergunta);
     $pergunta = str_replace("-", "", $pergunta);
     $pergunta = str_replace("/", "", $pergunta);
+    $pergunta = str_replace("?", "", $pergunta);
+    $pergunta = str_replace("!", "", $pergunta);
 
     return explode(' ', $pergunta);
   }
