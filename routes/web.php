@@ -14,3 +14,6 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+//Route::get('/estatistica', 'EstatisticaController@separaPalavras');
+Route::get('/grafico-palavras', 'PalavraController@index');

@@ -18,3 +18,9 @@ Route::get("/atualiza-pergunta/{id}/{condicao}", "RedeNeural@atualizaMemoriaNeur
 
 Route::post("/salva-dados", "LeadController@salvar");
 Route::post("/atualiza-dados", "LeadController@atualiza");
+
+
+Route::get("/gerar-relatorio", "EstatisticaController@geraRelatorio");
+Route::get("/gerar-grafico", "EstatisticaController@geraGrafico");
+
+
